@@ -11,11 +11,11 @@ const schema = new Schema(
         type: String,
         default: 'Point',
         enum: ['Point'],
-        required: true
+        required: false
       }, 
       coordinates: {
         type: [Number],
-        required: true
+        required: false
       }
     },
     highlight: {

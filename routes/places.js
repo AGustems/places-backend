@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const uploader = require('../configs/cloudinary-setup')
 
 // include the model:
 const Place = require('../models/place')
@@ -61,11 +62,28 @@ router.get('/:id', (req, res, next) => {
     })
 })
 
-router.post('/', (req, res, next) => {
-  Place.create(req.body)
+router.post('/', uploader.single("imageUrl"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
+
+  const coordinates= []
+  coordinates.push(req.body.lat)
+  coordinates.push(req.body.lng)
+
+  Place.create( {
+    name: req.body.name,
+    description: req.body.description,
+    imageUrl: req.file.path,
+    loc:{
+      coordinates:coordinates
+    }
+  })
     .then(place => {
-      // console.log('Created new thing: ', aNewThing);
+      console.log('Created new thing: ', place);
       res.status(200).json(place)
+      return res.redirect('/list');
     })
     .catch(err => next(err))
 })

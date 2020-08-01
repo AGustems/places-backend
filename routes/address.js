@@ -7,6 +7,7 @@ const axios = require("axios")
 const Place = require('../models/place')
 
 router.get('/', (req, res, next) => {
+  console.log(req.query.search)
   const search = unidecode(req.query.search)
   const path = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
   const queryParams = "inputtype=textquery&fields=formatted_address,name,geometry,place_id"
