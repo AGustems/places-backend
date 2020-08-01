@@ -18,11 +18,11 @@ router.get('/highlights', (req, res, next) => {
 
   console.log(quantity)
 
-  // Place.find({highlight..... << crear aqui tu query})
-  //   .then(resp => res.status(200).json(resp))
-  //   .catch(err => next(err))
+  Place.find().limit(3)
+    .then(resp => res.status(200).json(resp))
+    .catch(err => next(err))
 
-  res.status(200).json({ message: "aguardando implementacion. " })
+  
 
 })
 
@@ -102,13 +102,17 @@ router.patch('/:id', (req, res, next) => {
 
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id',  uploader.single("imageUrl"), (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' })
     return
   }
-
-  Place.findByIdAndUpdate(req.params.id, req.body)
+  
+  Place.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    description: req.body.description,
+    imageUrl: req.file.path
+  })
     .then(() => {
       res.json({ message: `Place id ${req.params.id} updated successfully.` })
     })
@@ -116,6 +120,5 @@ router.put('/:id', (req, res, next) => {
       res.json(error)
     })
 })
-
 
 module.exports = router
