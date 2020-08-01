@@ -17,7 +17,7 @@ router.get('/highlights', (req, res, next) => {
 
   console.log(quantity)
 
-  Place.find()
+  Place.find().limit(3)
     .then(resp => res.status(200).json(resp))
     .catch(err => next(err))
 
