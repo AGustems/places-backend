@@ -17,11 +17,11 @@ router.get('/highlights', (req, res, next) => {
 
   console.log(quantity)
 
-  // Place.find({highlight..... << crear aqui tu query})
-  //   .then(resp => res.status(200).json(resp))
-  //   .catch(err => next(err))
+  Place.find()
+    .then(resp => res.status(200).json(resp))
+    .catch(err => next(err))
 
-  res.status(200).json({ message: "aguardando implementacion. " })
+  
 
 })
 
