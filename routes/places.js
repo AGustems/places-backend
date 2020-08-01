@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-
+const uploader = require('../configs/cloudinary-setup')
 // include the model:
 const Place = require('../models/place')
 
@@ -84,13 +84,17 @@ router.patch('/:id', (req, res, next) => {
 
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id',  uploader.single("imageUrl"), (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' })
     return
   }
-
-  Place.findByIdAndUpdate(req.params.id, req.body)
+  
+  Place.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    description: req.body.description,
+    imageUrl: req.file.path
+  })
     .then(() => {
       res.json({ message: `Place id ${req.params.id} updated successfully.` })
     })
@@ -98,6 +102,5 @@ router.put('/:id', (req, res, next) => {
       res.json(error)
     })
 })
-
 
 module.exports = router
